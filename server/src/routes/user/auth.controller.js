@@ -7,6 +7,7 @@ const ErrorResponse = require("./../../helpers/error");
 const _ = require("lodash");
 const jwt = require("jsonwebtoken");
 const config = require("../../config");
+const ms = require("ms");
 
 const logIn = asyncHandler(async (req, res, next) => {
    const { email, password } = req.body;
@@ -14,21 +15,20 @@ const logIn = asyncHandler(async (req, res, next) => {
       return next(new ErrorResponse("please provide email or password", 400));
    }
 
-   const users = await db.User.findAll({ where: { email }, includes: ["children"] });
-   const user = { ...users[0] };
+   const user = await db.User.findOne({ where: { email }, include: ["children"] });
 
-   if (!user && !user.length) {
-      return next(new ErrorResponse("user not Found", 404));
+   if (!user) {
+      return next(new ErrorResponse("User not Found", 404));
    }
 
    const isMatch = await comparePassword(password, user.password);
 
    if (!isMatch) {
-      return next(new ErrorResponse("please enter valid password!!"));
+      return next(new ErrorResponse("please enter valid password!!", 400));
    }
 
    //create jwt token and send
-   createSendToken(user, res);
+   createSendToken(user.dataValues, res, req);
 });
 
 const signUp = async (req, res, next) => {
@@ -47,10 +47,11 @@ const signUp = async (req, res, next) => {
             role: req.body.role,
             password: hashPassword,
          },
-         { transcation: transcation }
+         { transaction: transcation }
       );
+
       await transcation.commit();
-      createSendToken(user, res);
+      createSendToken(user, res, req);
    } catch (err) {
       transcation && (await transcation.rollback());
       next(err);
@@ -65,15 +66,16 @@ const logout = (req, res) => {
    res.status(200).json({ success: true });
 };
 
-const createSendToken = (user, res) => {
+const createSendToken = (user, res, req) => {
    const token = jwt.sign(
       { id: user.id },
-      { secret: config.secret || "mydummySecret" },
+      config.secret || "mydummySecret",
       { expiresIn: "1d" }
    );
 
+   const expiresIn = ms('1d') / 1000;
    res.cookie("jwt", token, {
-      expires: new Date(Date.now() * 1 * 24 * 60 * 60 * 1000),
+      expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
       httpOnly: true,
       secure: req.secure || req.headers["x-forwarded-proto"] === "https",
    });
@@ -83,6 +85,7 @@ const createSendToken = (user, res) => {
    res.status(200).json({
       success: true,
       token,
+      expiresIn,
       user,
    });
 };

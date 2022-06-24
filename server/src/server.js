@@ -13,6 +13,8 @@ const start = async () => {
    const db = require("./models");
 
    await dbConnect();
+   // development purpose
+   // await db.sequelize.sync({ force: true });
    await db.sequelize.sync();
 
    const port = config.port || 3000;

@@ -1,6 +1,6 @@
 "use strict";
 
-const db = require("./../../../models");
+const db = require("../../models");
 const _ = require("lodash");
 
 exports.createMany = async (children, transaction) => {
@@ -11,13 +11,12 @@ exports.createMany = async (children, transaction) => {
    return db.Child.bulkCreate(children, options);
 };
 
-exports.deleteMany = async (children, transaction) => {
-   const childrenIds = _.map(children, (_child) => _child.id);
+exports.deleteManyByUserId = async (userId, transaction) => {
    const query = {
-      where: { id: childrenIds },
+      where: { userId: userId },
    };
    if (transaction) {
       query["transaction"] = transaction;
    }
-   return db.Child.destory(query);
+   return db.Child.destroy(query);
 };

@@ -2,7 +2,9 @@
 
 const db = require("./../../models");
 const _ = require("lodash");
-const childController = require("./child/child.controller");
+const childController = require("./../child/child.controller");
+const asyncHandler = require("express-async-handler");
+const { Op } = require("sequelize");
 
 exports.updateUser = async (req, res, next) => {
    let transaction = null;
@@ -14,25 +16,26 @@ exports.updateUser = async (req, res, next) => {
          role: req.body.role,
       };
       transaction = await db.sequelize.transaction();
-      const user = await db.User.update(userObjUpdate, {
+      await db.User.update(userObjUpdate, {
          where: { id: req.params.id },
-         transaction: transaction,
+         transaction: transaction
       });
 
-      if (req.body.childrens) {
-         const bodyChildren = _.map(req.body.childrens || [], (_child) => {
-            _child["userId"] = user.id;
+      if (req.body.children) {
+         const bodyChildren = _.map(req.body.children || [], (_child) => {
+            _child["userId"] = req.params.id;
             return _child;
          });
 
-         await childController.deleteMany(bodyChildren, transaction);
-         const children = await childController.createMany(bodyChildren, transaction);
-         user["children"] = _.cloneDeep(children.defaultValues || bodyChildren);
+         await childController.deleteManyByUserId(req.params.id, transaction);
+         await childController.createMany(bodyChildren, transaction);
       }
 
+      const userTosend = await db.User.findByPk(req.params.id, { include: ["children"], transaction });
+      await transaction.commit();
       return res.status(200).json({
          success: true,
-         user,
+         user: userTosend,
       });
    } catch (err) {
       transaction && (await transaction.rollback());
@@ -56,7 +59,7 @@ exports.deleteUser = async (req, res, next) => {
             (promise, _user) => {
                promise.push(db.User.destroy({ where: { id: req.params.id } }));
                if (_user.children && _user.children.length) {
-                  promise.push(childController.deleteMany(children));
+                  promise.push(childController.deleteManyByUserId(req.params.id));
                }
                return promise;
             },
@@ -73,6 +76,24 @@ exports.deleteUser = async (req, res, next) => {
    }
 };
 
-module.exports = {
-   createUser,
-};
+exports.getUsers = asyncHandler(async (req, res, next) => {
+
+   const { page, size, name } = req.query;
+   const condition = name ?  { name: { [Op.like]:`%${name}%`} } : null;
+   const { limit, offset } = getPagination(page, size);
+
+   const { count,  rows: users } = await db.User.findAndCountAll({ where: condition, limit: limit, offset: offset });
+
+   res.status(200).json({
+      success: true,
+      count,
+      users
+   })
+});
+
+const getPagination = (page, size) => {
+   const limit = size ? +size : 2;
+   const offset = page ? (page - 1) * limit : 0;
+
+   return { limit, offset };
+} 

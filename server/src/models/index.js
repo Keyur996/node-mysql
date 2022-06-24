@@ -1,7 +1,6 @@
 "use strict";
 
 const { Sequelize } = require("sequelize");
-const mysql = require("mysql2/promise");
 const config = require("../config");
 
 const { user, password, database } = config.database;
