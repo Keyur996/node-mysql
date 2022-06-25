@@ -8,12 +8,15 @@ const routes: Routes = [
   { path: '', redirectTo: '/user', pathMatch: 'full' },
   { path: 'user', component: UsersComponent },
   { path: 'user/:id', component: UserAddEditComponent },
-  { path: 'auth', loadChildren: (async () => (await import('./auth/auth.module')).AuthModule) },
+  {
+    path: 'auth',
+    loadChildren: async () => (await import('./auth/auth.module')).AuthModule,
+  },
   { path: '**', component: NotFoundComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { useHash: true })],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

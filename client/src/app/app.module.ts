@@ -18,7 +18,7 @@ import { ErrorModule } from './error/error.module';
     HomeComponent,
     UsersComponent,
     UserAddEditComponent,
-    NotFoundComponent
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,
@@ -26,9 +26,9 @@ import { ErrorModule } from './error/error.module';
     BrowserAnimationsModule,
     HttpClientModule,
     MaterialModule,
-    ErrorModule
+    ErrorModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

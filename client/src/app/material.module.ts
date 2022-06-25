@@ -12,9 +12,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   exports: [
     MatAutocompleteModule,
     MatButtonModule,
@@ -24,7 +22,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatIconModule,
     MatProgressSpinnerModule,
     MatCardModule,
-    MatDialogModule
-  ]
+    MatDialogModule,
+  ],
 })
-export class MaterialModule { }
+export class MaterialModule {}
