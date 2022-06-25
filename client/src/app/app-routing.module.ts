@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './auth/auth.guard';
 import { NotFoundComponent } from './not-found/not-found.component';
-import { UserAddEditComponent } from './users/user-add-edit/user-add-edit.component';
-import { UsersComponent } from './users/users.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/user', pathMatch: 'full' },
-  { path: 'user', component: UsersComponent },
-  { path: 'user/:id', component: UserAddEditComponent },
+  {
+    path: '',
+    canActivate: [AuthGuard],
+    loadChildren: async () =>
+      (await import('./users/users.module')).UsersModule,
+  },
   {
     path: 'auth',
     loadChildren: async () => (await import('./auth/auth.module')).AuthModule,
@@ -18,5 +20,6 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes, { useHash: true })],
   exports: [RouterModule],
+  providers: [AuthGuard],
 })
 export class AppRoutingModule {}

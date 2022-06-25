@@ -1,1 +1,8 @@
-<p>signup works!</p>
+<mat-card>
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <mat-card-title>Sign Up</mat-card-title>
+  <form [formGroup]="signUpForm" (submit)="onSignUp(signUpForm)">
+    <app-basic-user-details [form]="signUpForm"></app-basic-user-details>
+    <button mat-raised-button color="primary" type="submit">SignUp</button>
+  </form>
+</mat-card>

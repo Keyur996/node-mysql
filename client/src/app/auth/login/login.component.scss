@@ -1,8 +1,18 @@
 mat-form-field {
-    width: 100%;
+  width: 100%;
+  padding-top: 20px;
 }
-  
+
 mat-spinner {
-    margin: auto;
+  margin: auto;
 }
-  
+
+mat-card {
+  margin: 20vh auto;
+  max-width: 400px;
+  padding: 25px;
+}
+
+button {
+  margin: 15px 10px auto auto;
+}

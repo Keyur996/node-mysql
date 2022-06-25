@@ -7,7 +7,19 @@ import { AuthService } from '../auth/auth.service';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  constructor(public authService: AuthService) {}
+  isisAuthenticated: boolean = false;
+  constructor(private authService: AuthService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.isisAuthenticated = this.authService.getIsAuth();
+    this.authService.getAuthStatusListener().subscribe({
+      next: (isAuthenticated: boolean) => {
+        this.isisAuthenticated = isAuthenticated;
+      },
+    });
+  }
+
+  onLogOut(): void {
+    this.authService.logout();
+  }
 }

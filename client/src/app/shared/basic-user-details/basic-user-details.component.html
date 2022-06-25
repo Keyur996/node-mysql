@@ -1,0 +1,51 @@
+<div [formGroup]="basicForm">
+  <mat-form-field>
+    <input
+      type="text"
+      formControlName="name"
+      name="name"
+      matInput
+      placeholder="Name"
+    />
+    <mat-error *ngIf="">Please enter a valid password.</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input
+      matInput
+      name="email"
+      formControlName="email"
+      type="email"
+      placeholder="E-Mail"
+    />
+    <mat-error *ngIf="">Please enter a valid email.</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Phone</mat-label>
+    <span matPrefix>+91 &nbsp;</span>
+    <input
+      type="tel"
+      formControlName="phone"
+      matInput
+      placeholder="999-999-9999"
+    />
+  </mat-form-field>
+  <mat-form-field>
+    <input
+      type="password"
+      formControlName="password"
+      name="password"
+      matInput
+      placeholder="Password"
+    />
+    <mat-error *ngIf="">Please enter a valid password.</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Role</mat-label>
+    <mat-select formControlName="role">
+      <mat-option *ngFor="let role of roles" [value]="role">
+        {{ role }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <ng-content></ng-content>
+</div>

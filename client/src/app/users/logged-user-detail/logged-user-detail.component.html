@@ -1,0 +1,16 @@
+<mat-card class="example-card">
+  <mat-card-title>{{ loggedInuser.name }}</mat-card-title>
+  <mat-card-content>
+    <p>Email : {{ loggedInuser.email }}</p>
+    <p>Phone Number : {{ loggedInuser.phone }}</p>
+    <span *ngFor="let child of loggedInuser.children; let index = index">
+      <h4 *ngIf="index === 0">Childrens :</h4>
+      <p>Name : {{ child.name }}</p>
+      <p>Age : {{ child.age }}</p>
+    </span>
+  </mat-card-content>
+  <mat-divider inset></mat-divider>
+  <mat-card-actions>
+    <button mat-button>Edit</button>
+  </mat-card-actions>
+</mat-card>

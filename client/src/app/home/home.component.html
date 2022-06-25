@@ -1,7 +1,8 @@
 <mat-toolbar color="primary">
-  <span>User Management</span>
+  <span style="cursor: pointer" routerLink="/">User Management</span>
   <span class="example-spacer"></span>
   <button
+    *ngIf="!isisAuthenticated"
     mat-button
     class="example-icon"
     routerLink="/auth/login"
@@ -11,6 +12,7 @@
     LogIn
   </button>
   <button
+    *ngIf="!isisAuthenticated"
     mat-button
     class="example-icon"
     routerLink="/auth/signup"
@@ -18,5 +20,15 @@
   >
     <mat-icon>person_add</mat-icon>
     Sign Up
+  </button>
+  <button
+    *ngIf="isisAuthenticated"
+    mat-button
+    type="button"
+    class="example-icon"
+    (click)="onLogOut()"
+  >
+    <mat-icon>logout</mat-icon>
+    LogOut
   </button>
 </mat-toolbar>

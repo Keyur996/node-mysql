@@ -5,30 +5,24 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './home/home.component';
-import { UsersComponent } from './users/users.component';
-import { UserAddEditComponent } from './users/user-add-edit/user-add-edit.component';
 import { NotFoundComponent } from './not-found/not-found.component';
-import { MaterialModule } from './material.module';
-import { HttpClientModule } from '@angular/common/http';
-import { ErrorModule } from './error/error.module';
+import { SharedModule } from './shared/shared.module';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './auth/auth.interceptor';
+import { UsersModule } from './users/users.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    UsersComponent,
-    UserAddEditComponent,
-    NotFoundComponent,
-  ],
+  declarations: [AppComponent, HomeComponent, NotFoundComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    HttpClientModule,
-    MaterialModule,
-    ErrorModule,
+    SharedModule,
+    UsersModule,
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
