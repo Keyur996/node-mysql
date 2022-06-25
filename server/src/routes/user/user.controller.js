@@ -18,7 +18,7 @@ exports.updateUser = async (req, res, next) => {
       transaction = await db.sequelize.transaction();
       await db.User.update(userObjUpdate, {
          where: { id: req.params.id },
-         transaction: transaction
+         transaction: transaction,
       });
 
       if (req.body.children) {
@@ -31,7 +31,10 @@ exports.updateUser = async (req, res, next) => {
          await childController.createMany(bodyChildren, transaction);
       }
 
-      const userTosend = await db.User.findByPk(req.params.id, { include: ["children"], transaction });
+      const userTosend = await db.User.findByPk(req.params.id, {
+         include: ["children"],
+         transaction,
+      });
       await transaction.commit();
       return res.status(200).json({
          success: true,
@@ -77,18 +80,21 @@ exports.deleteUser = async (req, res, next) => {
 };
 
 exports.getUsers = asyncHandler(async (req, res, next) => {
-
    const { page, size, name } = req.query;
-   const condition = name ?  { name: { [Op.like]:`%${name}%`} } : null;
+   const condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
    const { limit, offset } = getPagination(page, size);
 
-   const { count,  rows: users } = await db.User.findAndCountAll({ where: condition, limit: limit, offset: offset });
+   const { count, rows: users } = await db.User.findAndCountAll({
+      where: condition,
+      limit: limit,
+      offset: offset,
+   });
 
    res.status(200).json({
       success: true,
       count,
-      users
-   })
+      users,
+   });
 });
 
 const getPagination = (page, size) => {
@@ -96,4 +102,4 @@ const getPagination = (page, size) => {
    const offset = page ? (page - 1) * limit : 0;
 
    return { limit, offset };
-} 
+};

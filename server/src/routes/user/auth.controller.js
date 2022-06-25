@@ -67,13 +67,11 @@ const logout = (req, res) => {
 };
 
 const createSendToken = (user, res, req) => {
-   const token = jwt.sign(
-      { id: user.id },
-      config.secret || "mydummySecret",
-      { expiresIn: "1d" }
-   );
+   const token = jwt.sign({ id: user.id }, config.secret || "mydummySecret", {
+      expiresIn: "1d",
+   });
 
-   const expiresIn = ms('1d') / 1000;
+   const expiresIn = ms("1d") / 1000;
    res.cookie("jwt", token, {
       expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
       httpOnly: true,
