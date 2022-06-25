@@ -10,6 +10,7 @@ import { UserAddEditComponent } from './users/user-add-edit/user-add-edit.compon
 import { NotFoundComponent } from './not-found/not-found.component';
 import { MaterialModule } from './material.module';
 import { HttpClientModule } from '@angular/common/http';
+import { ErrorModule } from './error/error.module';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    MaterialModule
+    MaterialModule,
+    ErrorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

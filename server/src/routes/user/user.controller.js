@@ -47,7 +47,7 @@ exports.deleteUser = async (req, res, next) => {
    try {
       const query = {
          where: { id: req.params.id },
-         includes: ["children"],
+         include: ["children"],
          raw: true,
          nest: true,
       };
