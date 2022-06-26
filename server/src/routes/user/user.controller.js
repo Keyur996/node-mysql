@@ -86,10 +86,11 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
    const { limit, offset } = getPagination(page, size);
 
    const { count, rows: users } = await db.User.findAndCountAll({
-      where: condition,
       include: ["children"],
+      where: condition,
       limit: limit,
       offset: offset,
+      distinct: true,
    });
 
    res.status(200).json({
@@ -112,6 +113,15 @@ exports.getUser = asyncHandler(async (req, res, next) => {
       message: "User fetched Successfully!",
       success: true,
       user,
+   });
+});
+
+exports.getCountByEmail = asyncHandler(async (req, res, next) => {
+   const count = await db.User.count({ where: { email: req.params.email } });
+
+   res.status(200).json({
+      success: true,
+      count,
    });
 });
 

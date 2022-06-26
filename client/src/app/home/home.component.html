@@ -1,5 +1,7 @@
 <mat-toolbar color="primary">
-  <span style="cursor: pointer" routerLink="/">User Management</span>
+  <span style="cursor: pointer" [routerLink]="['/user-details']"
+    >User Management</span
+  >
   <button
     *ngIf="isAuthenticated && isAdmin"
     mat-button

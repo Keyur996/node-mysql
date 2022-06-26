@@ -7,7 +7,9 @@
       matInput
       placeholder="Name"
     />
-    <mat-error *ngIf="">Please enter a valid password.</mat-error>
+    <mat-error *ngIf="getControl('name')?.invalid">
+      Please enter a valid name.
+    </mat-error>
   </mat-form-field>
   <mat-form-field *ngIf="isControlExist('email')">
     <input
@@ -17,7 +19,17 @@
       type="email"
       placeholder="E-Mail"
     />
-    <mat-error *ngIf="">Please enter a valid email.</mat-error>
+    <mat-error
+      *ngIf="
+        getControl('email')?.hasError('required') ||
+        getControl('email')?.hasError('email')
+      "
+    >
+      Please enter a valid email.
+    </mat-error>
+    <mat-error *ngIf="getControl('email')?.hasError('unique')">
+      email Address Already <strong> exists. </strong>
+    </mat-error>
   </mat-form-field>
   <mat-form-field *ngIf="isControlExist('phone')">
     <mat-label>Phone</mat-label>
@@ -28,6 +40,9 @@
       matInput
       placeholder="999-999-9999"
     />
+    <mat-error *ngIf="getControl('phone')?.invalid">
+      Please enter a valid phone.
+    </mat-error>
   </mat-form-field>
   <mat-form-field *ngIf="isControlExist('password')">
     <input
@@ -37,7 +52,9 @@
       matInput
       placeholder="Password"
     />
-    <mat-error *ngIf="">Please enter a valid password.</mat-error>
+    <mat-error *ngIf="getControl('phone')?.invalid">
+      Please enter a valid password.
+    </mat-error>
   </mat-form-field>
   <mat-form-field *ngIf="isControlExist('role')">
     <mat-label>Role</mat-label>
@@ -46,6 +63,9 @@
         {{ role }}
       </mat-option>
     </mat-select>
+    <mat-error *ngIf="getControl('role')?.invalid">
+      Please enter a valid password.
+    </mat-error>
   </mat-form-field>
   <span *ngIf="isControlExist('children')">
     <ng-container formArrayName="children">
@@ -58,14 +78,20 @@
               type="text"
               placeholder="Child Name"
             />
+            <mat-error *ngIf="childForm.get('name')?.invalid">
+              Please enter a valid name.
+            </mat-error>
           </mat-form-field>
           <mat-form-field>
             <input
               matInput
               formControlName="age"
               type="number"
-              placeholder="Child Name"
+              placeholder="Child Age"
             />
+            <mat-error *ngIf="childForm.get('age')?.invalid">
+              Please enter a valid age.
+            </mat-error>
           </mat-form-field>
           <mat-icon class="delete-btn" (click)="deleteChild(i)">
             delete_forever

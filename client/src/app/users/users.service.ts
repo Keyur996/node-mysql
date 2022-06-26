@@ -55,4 +55,16 @@ export class UsersService {
         },
       });
   }
+
+  getCountByEmail(email: string) {
+    return this.http.get<{ success: boolean; count: number }>(
+      `${BACKEND_URL}/user/count/${email}`
+    );
+  }
+
+  deleteUser(id: string | number) {
+    return this.http.delete<{ success: boolean; data: null }>(
+      `${BACKEND_URL}/user/${id}`
+    );
+  }
 }

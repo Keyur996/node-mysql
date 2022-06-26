@@ -12,6 +12,7 @@ import { Child, User } from 'src/app/auth/models/signup-user.model';
 import { UsersService } from '../users.service';
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs';
+import { UniqueEmailValidator } from 'src/app/shared/validators/unique-email.validator';
 
 @Component({
   selector: 'app-user-add-edit',
@@ -21,6 +22,7 @@ import { Subscription } from 'rxjs';
 export class UserAddEditComponent implements OnInit, OnDestroy {
   userForm!: FormGroup;
   private user!: User;
+  private clonedUser!: User;
   private isLoggedInUser: boolean = false;
   private isAdmin: boolean = false;
   private updateUserSub!: Subscription;
@@ -43,6 +45,8 @@ export class UserAddEditComponent implements OnInit, OnDestroy {
           this.uesrSub = this.userService.getUserById(id).subscribe({
             next: (response) => {
               this.user = response.user;
+              this.clonedUser = _.cloneDeep(response.user);
+              this.initUserForm();
               this.isLoggedInUser =
                 response.user.id === this.authService.getUser()?.id;
               this.isAdmin = this.authService.getUser()?.role === 'Admin';
@@ -63,7 +67,16 @@ export class UserAddEditComponent implements OnInit, OnDestroy {
   initUserForm() {
     this.userForm = this.fb.group({
       name: new FormControl('', Validators.required),
-      email: new FormControl('', [Validators.required, Validators.email]),
+      email: new FormControl(
+        '',
+        [Validators.required, Validators.email],
+        [
+          UniqueEmailValidator.uniqueEmailValidator(
+            this.userService,
+            this.clonedUser
+          ),
+        ]
+      ),
       phone: new FormControl(null, Validators.required),
       children: this.fb.array([]),
     });
@@ -112,6 +125,6 @@ export class UserAddEditComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.uesrSub.unsubscribe();
-    this.updateUserSub.unsubscribe();
+    this.updateUserSub && this.updateUserSub.unsubscribe();
   }
 }

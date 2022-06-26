@@ -6,6 +6,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { UniqueEmailValidator } from 'src/app/shared/validators/unique-email.validator';
+import { UsersService } from 'src/app/users/users.service';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -18,7 +20,11 @@ export class SignupComponent implements OnInit {
   authStatusSub!: Subscription;
   isLoading = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private userService: UsersService
+  ) {}
 
   ngOnInit(): void {
     this.initSignUpForm();
@@ -32,7 +38,11 @@ export class SignupComponent implements OnInit {
   initSignUpForm() {
     this.signUpForm = this.fb.group({
       name: new FormControl('', Validators.required),
-      email: new FormControl('', [Validators.required, Validators.email]),
+      email: new FormControl(
+        '',
+        [Validators.required, Validators.email],
+        [UniqueEmailValidator.uniqueEmailValidator(this.userService)]
+      ),
       phone: new FormControl(null, Validators.required),
       password: new FormControl('', Validators.required),
       role: new FormControl('User', Validators.required),

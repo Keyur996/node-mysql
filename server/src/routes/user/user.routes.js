@@ -14,4 +14,6 @@ router
    .patch(protect, authorizeRole("Admin"), userController.updateUser)
    .delete(protect, authorizeRole("Admin"), userController.deleteUser);
 
+router.route("/count/:email").get(userController.getCountByEmail);
+
 module.exports = router;

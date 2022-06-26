@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/models/signup-user.model';
 import { UsersService } from './users.service';
 
@@ -18,7 +19,10 @@ export class UsersComponent implements OnInit, OnDestroy {
   currentPage = 1;
   pageSizeOptions = [1, 2, 5, 10];
 
-  constructor(private userService: UsersService) {}
+  constructor(
+    private userService: UsersService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.isLoading = true;
@@ -40,7 +44,20 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.userService.getUsers(this.currentPage, this.size);
   }
 
-  onDelete(userId: number | null) {}
+  onDelete(userId: number) {
+    this.isLoading = true;
+    this.userService.deleteUser(userId).subscribe({
+      next: (response) => {
+        if (response.success) {
+          const currentUser = this.authService.getUser()?.id == userId;
+          if (currentUser) {
+            return this.authService.logout();
+          }
+          this.userService.getUsers(this.currentPage, this.size);
+        }
+      },
+    });
+  }
 
   ngOnDestroy(): void {
     this.usersSub.unsubscribe();

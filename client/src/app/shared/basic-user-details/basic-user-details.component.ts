@@ -28,6 +28,10 @@ export class BasicUserDetailsComponent implements OnInit {
     return this.basicForm.controls['children'] as FormArray;
   }
 
+  getControl(control: string): FormControl {
+    return this.basicForm.get(control) as FormControl;
+  }
+
   addChild() {
     const childForm = this.fb.group({
       name: new FormControl('', Validators.required),
