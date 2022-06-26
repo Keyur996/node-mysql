@@ -10,6 +10,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   exports: [
@@ -24,6 +26,8 @@ import { MatDividerModule } from '@angular/material/divider';
     MatDialogModule,
     MatSelectModule,
     MatDividerModule,
+    MatPaginatorModule,
+    MatExpansionModule,
   ],
 })
 export class MaterialModule {}

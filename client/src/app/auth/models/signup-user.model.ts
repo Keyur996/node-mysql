@@ -4,7 +4,7 @@ export class SignupUser {
   email: string;
   phone: number;
   password: string;
-  role: string;
+  role?: string;
 
   constructor(user: any) {
     this.id = user.id;

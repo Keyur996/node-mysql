@@ -32,6 +32,12 @@ export class AuthService {
     return this.user;
   }
 
+  updateUser(user: User) {
+    this.user = user;
+    localStorage.setItem('user', JSON.stringify(user));
+    this.authStatusListener.next(true);
+  }
+
   getAuthStatusListener() {
     return this.authStatusListener.asObservable();
   }
@@ -130,7 +136,9 @@ export class AuthService {
   private getAuthData() {
     const token = localStorage.getItem('token');
     const expirationDate = localStorage.getItem('expiration');
-    const user = localStorage.getItem('user');
+    const user = localStorage.getItem('user')
+      ? JSON.parse(localStorage.getItem('user')!)
+      : null;
     if (!token || !expirationDate) {
       return;
     }

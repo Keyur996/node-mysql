@@ -1,5 +1,5 @@
-<div [formGroup]="basicForm">
-  <mat-form-field>
+<div [formGroup]="basicForm" class="basic-form">
+  <mat-form-field *ngIf="isControlExist('name')">
     <input
       type="text"
       formControlName="name"
@@ -9,7 +9,7 @@
     />
     <mat-error *ngIf="">Please enter a valid password.</mat-error>
   </mat-form-field>
-  <mat-form-field>
+  <mat-form-field *ngIf="isControlExist('email')">
     <input
       matInput
       name="email"
@@ -19,7 +19,7 @@
     />
     <mat-error *ngIf="">Please enter a valid email.</mat-error>
   </mat-form-field>
-  <mat-form-field>
+  <mat-form-field *ngIf="isControlExist('phone')">
     <mat-label>Phone</mat-label>
     <span matPrefix>+91 &nbsp;</span>
     <input
@@ -29,7 +29,7 @@
       placeholder="999-999-9999"
     />
   </mat-form-field>
-  <mat-form-field>
+  <mat-form-field *ngIf="isControlExist('password')">
     <input
       type="password"
       formControlName="password"
@@ -39,7 +39,7 @@
     />
     <mat-error *ngIf="">Please enter a valid password.</mat-error>
   </mat-form-field>
-  <mat-form-field>
+  <mat-form-field *ngIf="isControlExist('role')">
     <mat-label>Role</mat-label>
     <mat-select formControlName="role">
       <mat-option *ngFor="let role of roles" [value]="role">
@@ -47,5 +47,36 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+  <span *ngIf="isControlExist('children')">
+    <ng-container formArrayName="children">
+      <ng-container *ngFor="let childForm of children.controls; let i = index">
+        <div class="child-form-row" [formGroupName]="i">
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="name"
+              type="text"
+              placeholder="Child Name"
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="age"
+              type="number"
+              placeholder="Child Name"
+            />
+          </mat-form-field>
+          <mat-icon class="delete-btn" (click)="deleteChild(i)">
+            delete_forever
+          </mat-icon>
+        </div>
+      </ng-container>
+    </ng-container>
+    <button mat-mini-fab type="button" (click)="addChild()">
+      <mat-icon class="add-course-btn">add</mat-icon>
+    </button>
+  </span>
+
   <ng-content></ng-content>
 </div>

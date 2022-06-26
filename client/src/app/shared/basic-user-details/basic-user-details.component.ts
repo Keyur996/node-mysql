@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {
+  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -18,4 +19,25 @@ export class BasicUserDetailsComponent implements OnInit {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {}
+
+  isControlExist(control: string) {
+    return !!this.basicForm.controls[control];
+  }
+
+  get children() {
+    return this.basicForm.controls['children'] as FormArray;
+  }
+
+  addChild() {
+    const childForm = this.fb.group({
+      name: new FormControl('', Validators.required),
+      age: new FormControl('', Validators.required),
+    });
+
+    this.children.push(childForm);
+  }
+
+  deleteChild(index: number) {
+    this.children.removeAt(index);
+  }
 }

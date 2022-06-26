@@ -10,6 +10,7 @@ router.route("").get(protect, authorizeRole("Admin"), userController.getUsers);
 
 router
    .route("/:id")
+   .get(protect, userController.getUser)
    .patch(protect, authorizeRole("Admin"), userController.updateUser)
    .delete(protect, authorizeRole("Admin"), userController.deleteUser);
 

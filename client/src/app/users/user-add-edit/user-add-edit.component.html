@@ -1,1 +1,6 @@
-<p>user-add-edit works!</p>
+<mat-card>
+  <form [formGroup]="userForm" (submit)="onSubmit(userForm)">
+    <app-basic-user-details [form]="userForm"></app-basic-user-details>
+    <button mat-raised-button color="warn" type="submit">Update</button>
+  </form>
+</mat-card>

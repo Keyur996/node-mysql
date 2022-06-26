@@ -42,7 +42,7 @@ const authorizeRole = (...roles) => {
    return (req, res, next) => {
       if (
          roles.includes(req.currentUser.role) ||
-         _.get(req, "params.id", "") === req.currentUser.id
+         _.get(req, "params.id", "") == req.currentUser.id
       ) {
          return next();
       }

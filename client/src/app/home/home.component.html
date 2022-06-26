@@ -1,8 +1,31 @@
 <mat-toolbar color="primary">
   <span style="cursor: pointer" routerLink="/">User Management</span>
+  <button
+    *ngIf="isAuthenticated && isAdmin"
+    mat-button
+    style="margin-left: 10px"
+    class="example-icon"
+    routerLink="/users-list"
+    routerLinkActive="mat-accent"
+  >
+    <mat-icon>group</mat-icon>
+    Users
+  </button>
+
+  <button
+    *ngIf="isAuthenticated && (isAdmin || isManager)"
+    mat-button
+    style="margin-left: 10px"
+    class="example-icon"
+    routerLink="/settings"
+    routerLinkActive="mat-accent"
+  >
+    <mat-icon>settings</mat-icon>
+    Settings
+  </button>
   <span class="example-spacer"></span>
   <button
-    *ngIf="!isisAuthenticated"
+    *ngIf="!isAuthenticated"
     mat-button
     class="example-icon"
     routerLink="/auth/login"
@@ -12,7 +35,7 @@
     LogIn
   </button>
   <button
-    *ngIf="!isisAuthenticated"
+    *ngIf="!isAuthenticated"
     mat-button
     class="example-icon"
     routerLink="/auth/signup"
@@ -22,7 +45,7 @@
     Sign Up
   </button>
   <button
-    *ngIf="isisAuthenticated"
+    *ngIf="isAuthenticated"
     mat-button
     type="button"
     class="example-icon"

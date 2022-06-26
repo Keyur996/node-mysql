@@ -4,6 +4,7 @@ const db = require("./../../models");
 const _ = require("lodash");
 const childController = require("./../child/child.controller");
 const asyncHandler = require("express-async-handler");
+const ErrorResponse = require("./../../helpers/error");
 const { Op } = require("sequelize");
 
 exports.updateUser = async (req, res, next) => {
@@ -86,6 +87,7 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
 
    const { count, rows: users } = await db.User.findAndCountAll({
       where: condition,
+      include: ["children"],
       limit: limit,
       offset: offset,
    });
@@ -94,6 +96,22 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
       success: true,
       count,
       users,
+   });
+});
+
+exports.getUser = asyncHandler(async (req, res, next) => {
+   const user = await db.User.findByPk(req.params.id, {
+      include: ["children"],
+   });
+
+   if (!user) {
+      return next(new ErrorResponse("User not Found", 404));
+   }
+
+   return res.status(200).json({
+      message: "User fetched Successfully!",
+      success: true,
+      user,
    });
 });
 
